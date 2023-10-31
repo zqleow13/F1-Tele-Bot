@@ -1,38 +1,17 @@
-# this line means that whatever variable or attribute with Final should not be reassigned (think of const in JS)
-from typing import Final 
-from telegram import Update
-from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
+import os #os gets environment variables
+from dotenv import load_dotenv #dotenv also gets environment variables
+import telebot
 
-TOKEN: Final = '6910715005:AAHlsn8Yd4njlcOTurOUyKGkyYYQhw9yu4g'
-BOT_USERNAME: Final = '@f1_updatess_bot'
+# Get token from env file
+load_dotenv()
+BOT_TOKEN = os.getenv('BOT_TOKEN')
+bot = telebot.TeleBot(BOT_TOKEN)
 
-# Commands
-# Start command - What do you want to tell the user when user presses start?
-async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply.text('Hello')
+# Message handlers = handles commands and then sends a msg
+# They define filters which a message must pass. If the message passes the filter, the function is called and the message is passed as an arg
 
-# Help command - Guide the user to use this bot
-async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply.text('Please type start to begin receiving race results!')
+@bot.message_handler(commands=['start', 'hello'])
+def send_welcome(message):
+    bot.reply_to(message, "Howdy, how are you doing?")
 
-
-# Custom command - Whatever command that you want to give
-async def custom_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply.text('Please type start to begin receiving race results!')
-    
-
-# Responses
-
-def handle_response(text: str) -> str:
-    processed: str = text.lower()
-    
-    
-    if 'hello' in proceesed:
-        return 'Hey there!'
-    
-    if 'how are you' in processed:
-        return 'I am good!'
-    
-    return "Sorry, I don't understand"
-    
-    
+bot.infinity_polling()
