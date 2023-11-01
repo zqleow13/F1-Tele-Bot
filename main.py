@@ -1,6 +1,10 @@
 import os #os gets environment variables
 from dotenv import load_dotenv #dotenv also gets environment variables
 import telebot
+import fastf1
+
+session = fastf1.get_session(2021,7,"Q")
+print(session)
 
 # Get token from env file
 load_dotenv()
