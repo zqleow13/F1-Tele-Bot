@@ -3,9 +3,6 @@ from dotenv import load_dotenv #dotenv also gets environment variables
 import telebot
 import fastf1
 
-session = fastf1.get_session(2021,7,"Q")
-print(session)
-
 # Get token from env file
 load_dotenv()
 BOT_TOKEN = os.getenv('BOT_TOKEN')
@@ -14,8 +11,17 @@ bot = telebot.TeleBot(BOT_TOKEN)
 # Message handlers = handles commands and then sends a msg
 # They define filters which a message must pass. If the message passes the filter, the function is called and the message is passed as an arg
 
-@bot.message_handler(commands=['start', 'hello'])
-def send_welcome(message):
-    bot.reply_to(message, "Howdy, how are you doing?")
+# start command - ask user to click a button to get recent race results
+@bot.message_handler(commands=['start'])
+def start_command(message):
+    bot.send_message(
+        message.chat.id, 
+        "Hi! I can show you the latest F1 race results. \n" +
+        "To get the latest race results, press /raceresults. \n" +
+        "To get help, press /help.")
+    
+
+# fetch race results
+# show race results in a message
 
 bot.infinity_polling()
