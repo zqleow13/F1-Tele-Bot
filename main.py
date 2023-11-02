@@ -1,6 +1,7 @@
 import os #os gets environment variables
 from dotenv import load_dotenv #dotenv also gets environment variables
 from telebot.async_telebot import AsyncTeleBot
+import asyncio
 import fastf1
 
 # Get token from env file
@@ -23,4 +24,4 @@ def start_command(message):
 # fetch race results
 # show race results in a message
 
-bot.infinity_polling()
+asyncio.run(bot.polling())
