@@ -14,14 +14,38 @@ bot = AsyncTeleBot(BOT_TOKEN)
 
 # start command - ask user to click a button to get recent race results
 @bot.message_handler(commands=['start'])
-def start_command(message):
-    bot.send_message(
+async def start_command(message):
+    await bot.send_message(
         message.chat.id, 
-        "Hi! I can show you the latest F1 race results. \n" +
-        "To get the latest race results, press /raceresults. \n" +
-        "To get help, press /help.")
-    
-# fetch race results
-# show race results in a message
+        "Hi! Welcome to F1 Updates Bot!\n" +
+        "To get the latest F1 race results, press /raceresults.")
 
-asyncio.run(bot.polling())
+
+
+
+    
+# TODO: fetch race results 
+session = fastf1.get_session(2021, 'French Grand Prix', 'R')
+session.load()  
+print(session.results.iloc[0:20].loc[:, ['BroadcastName', 'Position']])
+
+# show latest race results in a message
+# @bot.message_handler(commands=['results'])
+# async def send_f1_results(message):
+#     try:
+#         # Use the `await` keyword to make an asynchronous API request
+#         race = await asyncio.to_thread(fastf1.get_current_session)
+#         result = await asyncio.to_thread(race.get_results)
+#         result_text = "\n".join([f"{i + 1}. {driver.full_name}: {driver.points} points" for i, driver in enumerate(result)])
+#         await bot.send_message(message.chat.id, f"Latest F1 Race Results:\n{result_text}")
+#     except Exception as e:
+#         await bot.send_message(message.chat.id, f"An error occurred while fetching F1 results: {str(e)}")
+
+
+
+# # Polling to keep the bot running
+# async def main():
+#     await bot.polling()
+
+# if __name__ == '__main__':
+#     asyncio.run(main())
