@@ -2,7 +2,6 @@ import os #os gets environment variables
 from dotenv import load_dotenv #dotenv also gets environment variables
 from telebot.async_telebot import AsyncTeleBot
 import asyncio
-import fastf1
 
 # Get token from env file
 load_dotenv()
@@ -20,14 +19,9 @@ async def start_command(message):
         "Hi! Welcome to F1 Updates Bot!\n" +
         "To get the latest F1 race results, press /raceresults.")
 
-
-
-
     
-# TODO: fetch race results 
-session = fastf1.get_session(2021, 'French Grand Prix', 'R')
-session.load()  
-print(session.results.iloc[0:20].loc[:, ['BroadcastName', 'Position']])
+# TODO: fetch race results from Ergast API
+# To show past GP results as requested for the current 2023 season - Name & Position
 
 # show latest race results in a message
 # @bot.message_handler(commands=['results'])
