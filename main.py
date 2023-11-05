@@ -2,11 +2,17 @@ import os #os gets environment variables
 from dotenv import load_dotenv #dotenv also gets environment variables
 from telebot.async_telebot import AsyncTeleBot
 import asyncio
+import requests # for api call
 
 # Get token from env file
 load_dotenv()
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 bot = AsyncTeleBot(BOT_TOKEN)
+
+# Call Ergast API 
+url = 'http://ergast.com/api/f1/current/last/results'
+response = requests.get(url)
+print(response)
 
 # Message handlers = handles commands and then sends a msg
 # They define filters which a message must pass. If the message passes the filter, the function is called and the message is passed as an arg
