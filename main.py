@@ -3,16 +3,31 @@ from dotenv import load_dotenv #dotenv also gets environment variables
 from telebot.async_telebot import AsyncTeleBot
 import asyncio
 import requests # for api call
+import json
 
 # Get token from env file
 load_dotenv()
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 bot = AsyncTeleBot(BOT_TOKEN)
 
-# Call Ergast API 
+# Call Ergast API and make a GET request 
 url = 'http://ergast.com/api/f1/current/last/results'
 response = requests.get(url)
-print(response)
+
+# Check if request was successful
+# If the request was successful then parse the JSON response to access content
+if response.status_code == 200:
+   response_text = response.text  # Get the response as a string
+   print(response_text)
+   try:
+       json_data = response.json()
+        # Process the JSON data
+   except json.decoder.JSONDecodeError:
+        print("Invalid JSON response")
+else:
+    print(f"API request failed with status code {response.status_code}")
+    
+
 
 # Message handlers = handles commands and then sends a msg
 # They define filters which a message must pass. If the message passes the filter, the function is called and the message is passed as an arg
@@ -28,6 +43,11 @@ async def start_command(message):
     
 # TODO: fetch race results from Ergast API
 # To show past GP results as requested for the current 2023 season - Name & Position
+
+# async def send_race_results(chat.id, results):
+#     message = "Formula 1 Latest Race Results:\n"
+    
+#     for result in results[]
 
 # show latest race results in a message
 # @bot.message_handler(commands=['results'])
