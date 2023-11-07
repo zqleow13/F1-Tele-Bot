@@ -44,7 +44,7 @@ async def send_race_results(message):
     try:
         results = fetch_race_results()
         race_name = results['MRData']['RaceTable']['Races'][0]['raceName']
-        message_text = f'Formula 1 {race_name} Race Results:\n'
+        message_text = f'Formula 1 {race_name} Race Results:\n' + 'Please press /legend for the legend\n'
         
        
     
@@ -63,6 +63,13 @@ async def send_race_results(message):
     except Exception as e:
         print(f"An error occurred: {str(e)}")
         await bot.send_message(message.chat.id, "An error occurred while fetching race results. Sorry and please try again later.")
+        
+# legend command - to show what the outcome symbol means
+@bot.message_handler(commands='legend')
+async def legend_command(message):
+    await bot.send_message(
+        message.chat.id,
+        "Legend:\n" + "Number - Finishing Position\n" + "R - Retired\n" + "D - Disqualified\n" + "E - Excluded\n" + "W - Withdrawn\n")
     
 
 # Polling to keep the bot running
