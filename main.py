@@ -11,13 +11,13 @@ BOT_TOKEN = os.getenv('BOT_TOKEN')
 bot = AsyncTeleBot(BOT_TOKEN)
 
 # Call Ergast API and make a GET request 
-url = 'http://ergast.com/api/f1/current/last/results'
+url = 'http://ergast.com/api/f1/current/last/results.json' # Put .json after URL to access JSON data
 response = requests.get(url)
 
 # Check if request was successful
 # If the request was successful then parse the JSON response to access content
 if response.status_code == 200:
-   response_text = response.text  # Get the response as a string
+   response_text = response.text # Get the response as a string
    print(response_text)
    try:
        json_data = response.json()
