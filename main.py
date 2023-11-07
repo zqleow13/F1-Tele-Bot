@@ -43,13 +43,17 @@ async def start_command(message):
 async def send_race_results(message):
     try:
         results = fetch_race_results()
+        race_name = results['MRData']['RaceTable']['Races'][0]['raceName']
+        message_text = f'Formula 1 {race_name} Race Results:\n'
         
-        message_text = "Formula 1 Latest Race Results:\n"
+       
     
         for result in results['MRData']['RaceTable']['Races'][0]['Results']:
             position = result['position']
             driver = result['Driver']['code']
             outcome = result['positionText']
+            
+            
             
             result_str = f'{position}. {driver} ({outcome})\n'
             
