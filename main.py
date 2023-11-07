@@ -11,24 +11,22 @@ BOT_TOKEN = os.getenv('BOT_TOKEN')
 bot = AsyncTeleBot(BOT_TOKEN)
 
 # Call Ergast API and make a GET request 
-url = 'http://ergast.com/api/f1/current/last/results.json' # Put .json after URL to access JSON data
-response = requests.get(url)
-
-# Check if request was successful
-# If the request was successful then parse the JSON response to access content
-if response.status_code == 200:
-   response_text = response.text # Get the response as a string
-   print(response_text)
-   try:
-       json_data = response.json()
-        # Process the JSON data
-   except json.decoder.JSONDecodeError:
-        print("Invalid JSON response")
-else:
-    print(f"API request failed with status code {response.status_code}")
+def fetch_race_results():
+    url = 'http://ergast.com/api/f1/current/last/results.json' # Put .json after URL to access JSON data
+    try:
+        response = requests.get(url)
+        # Check if request was successful
+        # If the request was successful then parse the JSON response to access content
+        if response.status_code == 200:
+            results = response.json()
+            return results
+        else:
+            print(f"API request failed with status code {response.status_code}")
+            return None
+    except Exception as e:
+        print(f"An error occurred while fetching race results: {str(e)}")
+        return None
     
-
-
 # Message handlers = handles commands and then sends a msg
 # They define filters which a message must pass. If the message passes the filter, the function is called and the message is passed as an arg
 
@@ -39,33 +37,33 @@ async def start_command(message):
         message.chat.id, 
         "Hi! Welcome to F1 Updates Bot!\n" +
         "To get the latest F1 race results, press /raceresults.")
-
     
-# TODO: fetch race results from Ergast API
-# To show past GP results as requested for the current 2023 season - Name & Position
-
-# async def send_race_results(chat.id, results):
-#     message = "Formula 1 Latest Race Results:\n"
+# Access the latest race data from JSON and send race results 
+@bot.message_handler(commands=['raceresults'])
+async def send_race_results(message):
+    try:
+        results = fetch_race_results()
+        
+        message_text = "Formula 1 Latest Race Results:\n"
     
-#     for result in results[]
+        for result in results['MRData']['RaceTable']['Races'][0]['Results']:
+            position = result['position']
+            driver = result['Driver']['code']
+            outcome = result['positionText']
+            
+            result_str = f'{position}. {driver} ({outcome})\n'
+            
+            message_text += result_str
+    
+        await bot.send_message(message.chat.id, message_text)
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        await bot.send_message(message.chat.id, "An error occurred while fetching race results. Sorry and please try again later.")
+    
 
-# show latest race results in a message
-# @bot.message_handler(commands=['results'])
-# async def send_f1_results(message):
-#     try:
-#         # Use the `await` keyword to make an asynchronous API request
-#         race = await asyncio.to_thread(fastf1.get_current_session)
-#         result = await asyncio.to_thread(race.get_results)
-#         result_text = "\n".join([f"{i + 1}. {driver.full_name}: {driver.points} points" for i, driver in enumerate(result)])
-#         await bot.send_message(message.chat.id, f"Latest F1 Race Results:\n{result_text}")
-#     except Exception as e:
-#         await bot.send_message(message.chat.id, f"An error occurred while fetching F1 results: {str(e)}")
+# Polling to keep the bot running
+async def main():
+    await bot.polling()
 
-
-
-# # Polling to keep the bot running
-# async def main():
-#     await bot.polling()
-
-# if __name__ == '__main__':
-#     asyncio.run(main())
+if __name__ == '__main__':
+    asyncio.run(main())
