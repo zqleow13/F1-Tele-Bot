@@ -45,15 +45,11 @@ async def send_race_results(message):
         results = fetch_race_results()
         race_name = results['MRData']['RaceTable']['Races'][0]['raceName']
         message_text = f'Formula 1 {race_name} Race Results:\n' + 'Please press /legend for the legend\n'
-        
-       
     
         for result in results['MRData']['RaceTable']['Races'][0]['Results']:
             position = result['position']
             driver = result['Driver']['code']
             outcome = result['positionText']
-            
-            
             
             result_str = f'{position}. {driver} ({outcome})\n'
             
@@ -64,7 +60,14 @@ async def send_race_results(message):
         print(f"An error occurred: {str(e)}")
         await bot.send_message(message.chat.id, "An error occurred while fetching race results. Sorry and please try again later.")
         
-# legend command - to show what the outcome symbol means
+# Function to periodically check for the end of the race and send notification 
+async def check_race_results():
+    while True:
+        results = fetch_race_results()
+        
+        # Check if the race has ended   
+        
+# Legend command - to show what the outcome symbol means
 @bot.message_handler(commands='legend')
 async def legend_command(message):
     await bot.send_message(
