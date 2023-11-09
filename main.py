@@ -65,7 +65,13 @@ async def check_race_results():
     while True:
         results = fetch_race_results()
         
-        # Check if the race has ended   
+        # Check if the race has ended 
+        if results and 'Results' in results['MRData']['RaceTable']['Races'][0]:
+            chat_id = 123456789  # Replace with the actual chat ID where you want to send the notification
+            await send_race_results_notification(chat_id, results)
+
+        # Sleep for a period of time before checking again (adjust as needed)
+        await asyncio.sleep(60)  # Sleep for 1 minute 
         
 # Legend command - to show what the outcome symbol means
 @bot.message_handler(commands='legend')
