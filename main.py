@@ -68,7 +68,7 @@ async def check_race_results():
         # Check if the race has ended 
         if results and 'Results' in results['MRData']['RaceTable']['Races'][0]:
             chat_id = 123456789  # Replace with the actual chat ID where you want to send the notification
-            await send_race_results_notification(chat_id, results)
+            await send_race_results_notification(chat_id, results) # define this please
 
         # Sleep for a period of time before checking again (adjust as needed)
         await asyncio.sleep(60)  # Sleep for 1 minute 
