@@ -39,6 +39,7 @@ async def start_command(message):
         "To get the latest F1 race results, press /raceresults.")
     
 # Access the latest race data from JSON and send race results 
+# TODO: to change this to live update
 @bot.message_handler(commands=['raceresults'])
 async def send_race_results(message):
     try:
